@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <string name="app_name">安卓播放器</string>
+    <string name="shuffle_on">随即播放已打开</string>
+    <string name="shuffle_off">随机播放已关闭</string>
+    <string name="repeat_on">重复播放打开</string>
+    <string name="repeat_off">重复播放关闭</string>
+    <string name="quit_alert">确认退出吗？</string>
+    <string name="quit_true">确认</string>
+    <string name="quit_false">取消</string>
+
+</resources>

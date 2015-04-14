@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
 
-    <string name="hello">Hello World, AndroidBuildingMusicPlayerActivity!</string>
-    <string name="app_name">AndroidBuildingMusicPlayer</string>
+    <string name="app_name">AndroidMusicPlayer</string>
+    <string name="shuffle_on">Shuffle is ON</string>
+    <string name="shuffle_off">Shuffle is OFF</string>
+    <string name="repeat_on">Repeat is ON</string>
+    <string name="repeat_off">Repeat is OFF</string>
+    <string name="quit_alert">Are you sure to quit?</string>
+    <string name="quit_true">Yes</string>
+    <string name="quit_false">No</string>
 
 </resources>

@@ -6,7 +6,9 @@ import java.util.HashMap;
 import java.util.Random;
 
 import android.app.Activity;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -44,7 +46,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	private boolean isShuffle = false;
 	private boolean isRepeat = false;
 	private ArrayList<HashMap<String, String>> songsList = new ArrayList<HashMap<String, String>>();
-	
+
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -64,7 +66,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		songTitleLabel = (TextView) findViewById(R.id.songTitle);
 		songCurrentDurationLabel = (TextView) findViewById(R.id.songCurrentDurationLabel);
 		songTotalDurationLabel = (TextView) findViewById(R.id.songTotalDurationLabel);
-		
+
 		// Mediaplayer
 		mp = new MediaPlayer();
 		songManager = new SongsManager();
@@ -129,7 +131,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 				}
 			}
 		});
-		
+
 		/**
 		 * Backward button click event
 		 * Backward song to specified seconds
@@ -203,12 +205,12 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			public void onClick(View arg0) {
 				if(isRepeat){
 					isRepeat = false;
-					Toast.makeText(getApplicationContext(), "Repeat is OFF", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), R.string.repeat_off, Toast.LENGTH_SHORT).show();
 					btnRepeat.setImageResource(R.drawable.btn_repeat);
 				}else{
 					// make repeat to true
 					isRepeat = true;
-					Toast.makeText(getApplicationContext(), "Repeat is ON", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), R.string.repeat_on, Toast.LENGTH_SHORT).show();
 					// make shuffle to false
 					isShuffle = false;
 					btnRepeat.setImageResource(R.drawable.btn_repeat_focused);
@@ -227,12 +229,12 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			public void onClick(View arg0) {
 				if(isShuffle){
 					isShuffle = false;
-					Toast.makeText(getApplicationContext(), "Shuffle is OFF", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), R.string.shuffle_off, Toast.LENGTH_SHORT).show();
 					btnShuffle.setImageResource(R.drawable.btn_shuffle);
 				}else{
 					// make repeat to true
 					isShuffle= true;
-					Toast.makeText(getApplicationContext(), "Shuffle is ON", Toast.LENGTH_SHORT).show();
+					Toast.makeText(getApplicationContext(), R.string.shuffle_on, Toast.LENGTH_SHORT).show();
 					// make shuffle to false
 					isRepeat = false;
 					btnShuffle.setImageResource(R.drawable.btn_shuffle_focused);
@@ -309,7 +311,7 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 	 * Update timer on seekbar
 	 * */
 	public void updateProgressBar() {
-        mHandler.postDelayed(mUpdateTimeTask, 100);        
+        mHandler.postDelayed(mUpdateTimeTask, 100);
     }	
 	
 	/**
@@ -319,17 +321,17 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		   public void run() {
 			   long totalDuration = mp.getDuration();
 			   long currentDuration = mp.getCurrentPosition();
-			  
+
 			   // Displaying Total Duration time
 			   songTotalDurationLabel.setText(""+utils.milliSecondsToTimer(totalDuration));
 			   // Displaying time completed playing
 			   songCurrentDurationLabel.setText(""+utils.milliSecondsToTimer(currentDuration));
-			   
+
 			   // Updating progress bar
 			   int progress = (int)(utils.getProgressPercentage(currentDuration, totalDuration));
 			   //Log.d("Progress", ""+progress);
 			   songProgressBar.setProgress(progress);
-			   
+
 			   // Running this thread after 100 milliseconds
 		       mHandler.postDelayed(this, 100);
 		   }
@@ -397,11 +399,40 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 			}
 		}
 	}
-	
+
+    @Override
+    public void onBackPressed() {
+        new AlertDialog.Builder(this).setTitle(R.string.quit_alert)
+                .setIcon(android.R.drawable.ic_dialog_info)
+                .setPositiveButton(R.string.quit_true, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 点击“确认”后的操作
+                        AndroidBuildingMusicPlayerActivity.this.finish();
+
+                    }
+                })
+                .setNegativeButton(R.string.quit_false, new DialogInterface.OnClickListener() {
+
+                    @Override
+                    public void onClick(DialogInterface dialog, int which) {
+                        // 点击“取消”后的操作,这里不设置没有任何操作
+                    }
+                }).show();
+    }
+
+    @Override
+    public void onStop(){
+        super.onStop();
+    }
+
+
 	@Override
-	 public void onDestroy(){
-	 super.onDestroy();
+	public void onDestroy(){
+	    super.onDestroy();
+        mHandler.removeCallbacks(mUpdateTimeTask);
 	    mp.release();
-	 }
+	}
 	
 }
