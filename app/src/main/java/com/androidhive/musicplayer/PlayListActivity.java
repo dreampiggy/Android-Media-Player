@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 import android.app.ListActivity;
+import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.view.View;
@@ -26,7 +27,10 @@ public class PlayListActivity extends ListActivity {
 
 		SongsManager plm = new SongsManager();
 		// get all songs from sdcard
-		this.songsList = plm.getPlayList();
+
+
+        Context playListContext = this.getApplicationContext();//需要一个Activity的Context引用，来调用ContentProvider
+		this.songsList = plm.getPlayListFromContent(playListContext);
 
 		// looping through playlist
 		for (int i = 0; i < songsList.size(); i++) {

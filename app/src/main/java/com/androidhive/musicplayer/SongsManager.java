@@ -4,7 +4,11 @@ import java.io.File;
 import java.io.FilenameFilter;
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import android.content.Context;
+import android.database.Cursor;
 import android.os.Environment;
+import android.provider.MediaStore;
 
 public class SongsManager {
 	// SDCard Path
@@ -34,7 +38,7 @@ public class SongsManager {
 	 * Function to read all mp3 files from sdcard
 	 * and store the details in ArrayList
 	 * */
-	public ArrayList<HashMap<String, String>> getPlayList() {
+	public ArrayList<HashMap<String, String>> getPlayListFromFile() {
 		File home = new File(MEDIA_PATH);
 
         System.out.println(home);
@@ -64,7 +68,35 @@ public class SongsManager {
 	 * */
 	class FileExtensionFilter implements FilenameFilter {
 		public boolean accept(File dir, String name) {
-			return (name.endsWith(".mp3") || name.endsWith(".MP3"));
+			return (name.endsWith(".mp3") || name.endsWith(".MP3") || name.endsWith(".ogg") || name.endsWith(".OGG"));
 		}
 	}
+
+
+
+
+    public ArrayList<HashMap<String, String>> getPlayListFromContent(Context mediaContext) {
+        ArrayList<HashMap<String, String>> listAudio = new ArrayList<HashMap<String, String>>();
+        Cursor cursor = mediaContext.getContentResolver().query(MediaStore.Audio.Media.EXTERNAL_CONTENT_URI,
+                null, null, null, MediaStore.Audio.Media.DEFAULT_SORT_ORDER);
+        System.out.println("count = " + cursor.getCount());  //获取总共有多少个条目
+        while (cursor.moveToNext()) {
+
+//      MediaStore.Audio.Media._ID,     //媒体文件的ID值
+//      MediaStore.Audio.Media.DISPLAY_NAME,        //媒体文件的文件名
+//      MediaStore.Audio.Media.DATA,    //媒体文件的绝对路径
+//      MediaStore.Audio.Media.SIZE         //媒体文件的大小
+//      System.out.println("ColumnCount = " + cursor.getColumnCount());
+//      System.out.println(cursor.getString(0)); // 音频ID
+//      System.out.println(cursor.getString(1)); // 音频绝对路径
+//      System.out.println(cursor.getString(2)); // 音频文件名
+//      System.out.println(cursor.getString(3)); // 音频的大小 字节
+
+            HashMap<String, String> song = new HashMap<String, String>();
+            song.put("songTitle", cursor.getString(2));
+            song.put("songPath", cursor.getString(1));
+            listAudio.add(song);
+        }
+        return listAudio;
+    }
 }

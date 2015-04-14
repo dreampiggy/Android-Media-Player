@@ -6,6 +6,7 @@ import java.util.HashMap;
 import java.util.Random;
 
 import android.app.Activity;
+import android.content.Context;
 import android.content.Intent;
 import android.media.MediaPlayer;
 import android.media.MediaPlayer.OnCompletionListener;
@@ -74,7 +75,8 @@ public class AndroidBuildingMusicPlayerActivity extends Activity implements OnCo
 		mp.setOnCompletionListener(this); // Important
 		
 		// Getting all songs list
-		songsList = songManager.getPlayList();
+        Context playListContext = this.getApplicationContext();
+		songsList = songManager.getPlayListFromContent(playListContext);
 		
 		// By default play first song
 		playSong(0);
